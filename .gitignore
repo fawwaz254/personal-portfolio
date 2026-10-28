@@ -1,0 +1,21 @@
+
+# Environment dan kredensial
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Frontend
+**/node_modules/
+**/dist/
+
+# Laravel
+**/vendor/
+**/storage/*.key
+
+# Cache dan file sementara
+.DS_Store
+Thumbs.db
+.vscode/
