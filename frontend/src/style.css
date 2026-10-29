@@ -32,3 +32,209 @@ body { margin: 0; min-width: 320px; background: #0b1220; }
 @keyframes portraitZoom { from { transform: scale(1); } to { transform: scale(1.06); } }
 @keyframes orbitSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .portrait-frame, .portrait-photo, .portrait-orbit, .typing-cursor { animation: none !important; } }
+
+
+
+/* About scroll reveal */
+.about-reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 750ms ease,
+    transform 750ms cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.about-reveal.about-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-gradient-text {
+  background: linear-gradient(100deg, #64748b, #93c5fd 55%, #c4b5fd);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Main technology card */
+.tech-panel {
+  isolation: isolate;
+  transition: border-color 300ms ease;
+}
+
+.tech-panel:hover {
+  border-color: rgb(96 165 250 / 22%);
+}
+
+/* Default logos are dimmed */
+.tech-logo {
+  filter: grayscale(1) brightness(.55);
+  opacity: .48;
+}
+
+.tech-logo-lit {
+  filter: grayscale(0) brightness(1.12)
+    drop-shadow(0 0 9px color-mix(in srgb, var(--logo-color) 48%, transparent));
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.tech-logo-dim {
+  filter: grayscale(1) brightness(.45);
+  opacity: .35;
+}
+
+.tech-logo-card {
+  outline: none;
+}
+
+.tech-logo-card:hover .tech-logo-glow,
+.tech-logo-active .tech-logo-glow {
+  opacity: 1;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--logo-color) 13%, transparent),
+    transparent 75%
+  );
+}
+
+.tech-logo-card:hover,
+.tech-logo-active {
+  border-color: color-mix(in srgb, var(--logo-color) 38%, transparent);
+}
+
+.tech-logo-card:focus-visible {
+  border-color: var(--logo-color);
+}
+
+/* Detail and tab transitions */
+.tech-info-enter-active,
+.tech-info-leave-active,
+.tech-grid-enter-active,
+.tech-grid-leave-active {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.tech-info-enter-from,
+.tech-grid-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.tech-info-leave-to,
+.tech-grid-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-reveal,
+  .tech-panel,
+  .tech-logo,
+  .tech-logo-card,
+  .tech-info-enter-active,
+  .tech-info-leave-active,
+  .tech-grid-enter-active,
+  .tech-grid-leave-active {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .about-reveal {
+    opacity: 1;
+  }
+}
+/* Scroll reveal untuk About */
+.about-reveal {
+  opacity: 0;
+  transform: translate3d(0, 45px, 0) scale(0.98);
+  filter: blur(6px);
+
+  transition:
+    opacity 900ms ease,
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 900ms ease;
+
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+.about-reveal.about-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+}
+
+/* Card teknologi terasa lebih interaktif */
+.tech-panel {
+  transition:
+    border-color 400ms ease,
+    box-shadow 400ms ease,
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tech-panel:hover {
+  border-color: rgb(96 165 250 / 28%);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 20%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .about-reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  .tech-panel {
+    transition: none;
+  }
+}
+/* Transition for technology details and tabs */
+.tech-info-enter-active,
+.tech-info-leave-active,
+.tech-grid-enter-active,
+.tech-grid-leave-active {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.tech-info-enter-from,
+.tech-grid-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.tech-info-leave-to,
+.tech-grid-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-reveal,
+  .tech-panel,
+  .tech-logo,
+  .tech-logo-card,
+  .tech-info-enter-active,
+  .tech-info-leave-active,
+  .tech-grid-enter-active,
+  .tech-grid-leave-active {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .about-reveal {
+    opacity: 1;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}

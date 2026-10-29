@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { ArrowDownRight, ArrowUpRight, Check, ChevronRight, CircleCheck, Code2, Github, Linkedin, Mail, Menu, Terminal, X } from 'lucide-vue-next'
+import {ArrowDownRight, ArrowUpRight, Check, ChevronRight, CircleCheck,Code2, Download, Github, Linkedin, Mail, Menu, ShieldCheck,Terminal, X } from 'lucide-vue-next'
+
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || ''
 const mobileMenuOpen = ref(false)
@@ -9,6 +10,129 @@ const contactForm = ref({ name: '', email: '', message: '' })
 const sending = ref(false)
 const formStatus = ref('')
 const apiStatus = ref('Demo mode')
+
+
+const activeTechTab = ref('languages')
+const hoveredTech = ref(null)
+const activeTech = ref(null)
+
+const techGroups = {
+  languages: [
+    {
+      name: 'Java',
+      logo: 'https://www.vectorlogo.zone/logos/java/java-icon.svg',
+      color: '#ED8B00',
+      desc: 'Bahasa pemrograman berorientasi objek untuk membangun aplikasi.'
+    },
+    {
+      name: 'PHP',
+      logo: 'https://cdn.simpleicons.org/php/777BB4',
+      color: '#777BB4',
+      desc: 'Bahasa server-side untuk mengembangkan aplikasi web.'
+    },
+    {
+      name: 'JavaScript',
+      logo: 'https://cdn.simpleicons.org/javascript/F7DF1E',
+      color: '#F7DF1E',
+      desc: 'Membuat antarmuka dan interaksi website menjadi dinamis.'
+    },
+    {
+      name: 'HTML5',
+      logo: 'https://cdn.simpleicons.org/html5/E34F26',
+      color: '#E34F26',
+      desc: 'Menyusun struktur dan konten halaman web.'
+    },
+    {
+      name: 'CSS3',
+      logo: 'https://cdn.simpleicons.org/css/1572B6',
+      color: '#1572B6',
+      desc: 'Mengatur tampilan, layout, dan responsivitas website.'
+    }
+  ],
+  tools: [
+    {
+      name: 'Laravel',
+      logo: 'https://cdn.simpleicons.org/laravel/FF2D20',
+      color: '#FF2D20',
+      desc: 'Framework PHP untuk membangun aplikasi web.'
+    },
+    {
+      name: 'Vue.js',
+      logo: 'https://cdn.simpleicons.org/vuedotjs/4FC08D',
+      color: '#4FC08D',
+      desc: 'Framework JavaScript untuk membangun antarmuka interaktif.'
+    },
+    {
+      name: 'Tailwind CSS',
+      logo: 'https://cdn.simpleicons.org/tailwindcss/06B6D4',
+      color: '#06B6D4',
+      desc: 'Framework CSS untuk membangun desain dengan utility classes.'
+    },
+    {
+      name: 'MySQL',
+      logo: 'https://cdn.simpleicons.org/mysql/4479A1',
+      color: '#4479A1',
+      desc: 'Database relasional untuk menyimpan dan mengelola data.'
+    },
+    {
+      name: 'Git',
+      logo: 'https://cdn.simpleicons.org/git/F05032',
+      color: '#F05032',
+      desc: 'Mengelola riwayat perubahan kode dan versi aplikasi.'
+    },
+    {
+      name: 'GitHub',
+      logo: 'https://cdn.simpleicons.org/github/FFFFFF',
+      color: '#FFFFFF',
+      desc: 'Menyimpan repositori dan berkolaborasi dalam pengembangan.'
+    },
+    {
+      name: 'Cypress',
+      logo: 'https://cdn.simpleicons.org/cypress/69D3A7',
+      color: '#69D3A7',
+      desc: 'Menjalankan pengujian otomatis pada aplikasi web.'
+    }
+  ]
+}
+
+const currentTechs = computed(() => techGroups[activeTechTab.value])
+
+const displayedTech = computed(
+  () => hoveredTech.value || activeTech.value || currentTechs.value[0]
+)
+
+function changeTechTab(tab) {
+  activeTechTab.value = tab
+  hoveredTech.value = null
+  activeTech.value = null
+}
+
+// About section scroll reveal
+const aboutSection = ref(null)
+const aboutVisible = ref(false)
+
+let aboutObserver
+
+onMounted(() => {
+  aboutObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        aboutVisible.value = true
+        aboutObserver?.disconnect()
+      }
+    },
+    { threshold: 0.12 }
+  )
+
+  if (aboutSection.value) {
+    aboutObserver.observe(aboutSection.value)
+  }
+})
+
+onUnmounted(() => {
+  aboutObserver?.disconnect()
+})
+
 
 // Animated intro text
 const roles = ['Software Tester', 'Quality Assurance Enthusiast', 'Web Developer']
@@ -66,31 +190,65 @@ function typeNext() {
 
 onUnmounted(() => { clearInterval(typingTimer); clearTimeout(typingTimer) })
 
+
 const projects = [
   {
-    number: '01', name: 'CarSale Web Application', type: 'Automation',
-    description: 'End-to-end browser testing for core user flows, including authentication and product CRUD operations.',
-    tags: ['Cypress', 'E2E Testing', 'Test Cases'],
-    details: ['Login and registration flow', 'Create, update, and delete product', 'Assertions for expected UI state'],
-    status: 'Case study', accent: 'from-blue-500/20 to-cyan-400/5'
+    number: '01',
+    name: 'CarSale — Aplikasi Jual Beli Mobil',
+    type: 'Pengujian Otomatis',
+    description:
+      'Pengujian otomatis berbasis browser untuk memastikan alur utama aplikasi berjalan sesuai kebutuhan.',
+    tags: ['Cypress', 'Pengujian E2E', 'Test Case'],
+    details: [
+      'Pengujian login dan registrasi',
+      'Pengujian tambah, ubah, dan hapus produk',
+      'Validasi hasil berdasarkan kondisi yang diharapkan'
+    ],
+    image: '/public/carsale.png',
+    status: 'Proyek Pengujian',
+    accent: 'from-blue-500/20 to-cyan-400/5'
   },
   {
-    number: '02', name: 'Diakad — Tracer Alumni', type: 'Manual QA',
-    description: 'Academic information system feature with focus on flow analysis, test design, and maintainability.',
+    number: '02',
+    name: 'Diakad — Tracer Alumni',
+    type: 'Pengujian White-box',
+    description:
+      'Analisis alur fungsi Tracer Alumni untuk mengidentifikasi jalur independen dan mengevaluasi kompleksitas kode.',
     tags: ['White-box Testing', 'PHP', 'Cyclomatic Complexity'],
-    details: ['Analyze function control flow', 'Identify independent paths', 'Document testing rationale'],
-    status: 'Internship project', accent: 'from-violet-500/20 to-blue-400/5'
+    details: [
+      'Menganalisis alur kontrol fungsi',
+      'Mengidentifikasi jalur independen',
+      'Mengevaluasi kompleksitas kode'
+    ],
+    image: '/public/diakad.png',
+    status: 'Proyek Magang',
+    accent: 'from-violet-500/20 to-blue-400/5'
   },
   {
-    number: '03', name: 'MoneyFlow Finance App', type: 'Manual QA',
-    description: 'Personal finance application concept with budgeting, transactions, and savings workflows.',
-    tags: ['Functional Testing', 'Laravel', 'MySQL'],
-    details: ['Validate budget calculations', 'Check transaction categories', 'Test saving deposit workflows'],
-    status: 'Application project', accent: 'from-emerald-500/15 to-blue-400/5'
+    number: '03',
+    name: 'MoneyFlow — Aplikasi Keuangan',
+    type: 'Pengujian Fungsional',
+    description:
+      'Aplikasi pengelolaan keuangan pribadi dengan fitur anggaran, transaksi, dan tabungan.',
+    tags: ['Pengujian Fungsional', 'Laravel', 'MySQL'],
+    details: [
+      'Memeriksa perhitungan anggaran',
+      'Memvalidasi kategori transaksi',
+      'Menguji alur setoran tabungan'
+    ],
+    image: '/public/moneyflow.png',
+    status: 'Proyek Aplikasi',
+    accent: 'from-emerald-500/15 to-blue-400/5'
   }
 ]
-const filters = ['All', 'Automation', 'Manual QA']
-const visibleProjects = computed(() => activeFilter.value === 'All' ? projects : projects.filter(p => p.type === activeFilter.value))
+
+const filters = ['Semua', 'Pengujian Otomatis', 'Pengujian White-box', 'Pengujian Fungsional']
+
+const visibleProjects = computed(() =>
+  activeFilter.value === 'Semua'
+    ? projects
+    : projects.filter(p => p.type === activeFilter.value)
+)
 
 const sampleCases = [
   { id: 'TC-001', scenario: 'Login with valid credentials', expected: 'User enters dashboard', result: 'PASS', type: 'Positive' },
@@ -158,7 +316,7 @@ async function sendMessage() {
     </header>
 
     <main>
-      <section id="home" class="relative flex min-h-[680px] items-center pt-20">
+      <section id="home"class="relative flex min-h-screen items-center pt-20">
         <div class="grid-bg absolute inset-0"></div>
         <div class="pointer-events-none absolute -right-48 top-20 h-[520px] w-[520px] rounded-full bg-blue-600/15 blur-[120px]"></div>
         <div class="relative mx-auto grid w-full max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-[1.1fr_.9fr] lg:px-8">
@@ -192,51 +350,325 @@ async function sendMessage() {
         </div>
       </section>
 
-      <section id="about" class="mx-auto max-w-7xl px-5 py-24 lg:px-8">
-        <div class="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
-          <div><p class="mono text-xs tracking-[.2em] text-blue-300">01 / ABOUT ME</p><h2 class="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">Curious by nature.<br/><span class="text-slate-500">Precise by practice.</span></h2></div>
-          <div class="max-w-2xl">
-            <p class="text-lg leading-8 text-slate-300">I recently graduated with a Bachelor's degree in Informatics from the University of Muhammadiyah Malang. My background in web development helps me understand how applications are built, while my interest in quality assurance drives me to test how they behave in real-world scenarios.</p>
-            <p class="mt-5 leading-7 text-slate-400">I value clear test documentation, reproducible bug reports, and testing decisions supported by evidence. I'm continuing to grow in manual testing, test automation, and software quality practices.</p>
-            <div class="mt-8 grid gap-3 sm:grid-cols-2">
-              <div class="card rounded-xl p-4"><Code2 class="mb-3 text-blue-300" :size="21"/><h3 class="font-bold">Developer perspective</h3><p class="mt-2 text-sm leading-6 text-slate-400">Understanding web flows, APIs, and application logic.</p></div>
-              <div class="card rounded-xl p-4"><ShieldCheck class="mb-3 text-blue-300" :size="21"/><h3 class="font-bold">Quality mindset</h3><p class="mt-2 text-sm leading-6 text-slate-400">Thinking about expected results, edge cases, and risks.</p></div>
+    
+      <section id="about"ref="aboutSection"class="relative min-h-screen overflow-hidden border-y border-white/[0.07] bg-[#0b1220] px-5 pb-12 pt-20 lg:px-8 lg:pt-0">
+        <div class="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-blue-600/10 blur-[100px]"></div>
+        <div class="pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-violet-600/10 blur-[100px]"></div>
+
+        <div
+          class="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16"
+        >
+          <!-- LEFT: About -->
+          <div
+            class="about-reveal"
+            :class="{ 'about-visible': aboutVisible }"
+          >
+            <p class="mono text-xs tracking-[.2em] text-blue-300">
+              01 / Tentang Saya
+            </p>
+
+            <h2 class="mt-5 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+              Curious by nature.
+              <br />
+              <span class="about-gradient-text">Precise by practice.</span>
+            </h2>
+
+            <p class="mt-6 text-base leading-8 text-slate-300">
+              Mengenal teknologi bukan hanya tentang bagaimana aplikasi dibangun,
+              tetapi juga bagaimana memastikan aplikasi bekerja dengan baik.
+            </p>
+
+            <p class="mt-4 text-sm leading-7 text-slate-400">
+              Saya merupakan lulusan S1 Informatika Universitas Muhammadiyah Malang
+              yang tertarik pada pengembangan web dan software quality assurance.
+              Saya senang mempelajari cara kerja aplikasi, mengembangkan fitur,
+              serta menguji fungsionalitasnya agar berjalan sesuai kebutuhan.
+            </p>
+
+            <a
+              href="/CV-Fawwaz.pdf"
+              download="CV-Fawwaz.pdf"
+              class="group mt-8 inline-flex items-center gap-3 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-950/40 transition duration-300 hover:-translate-y-1 hover:bg-blue-500 hover:shadow-blue-500/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+            >
+              <Download
+                :size="18"
+                class="transition-transform duration-300 group-hover:translate-y-1"
+              />
+              Unduh CV Saya
+              <ArrowUpRight
+                :size="16"
+                class="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </a>
+          </div>
+
+          <!-- RIGHT: Interactive technology card -->
+          <div
+            class="about-reveal"
+            :class="{ 'about-visible': aboutVisible }"
+            style="--reveal-delay: 180ms"
+          >
+            <div class="tech-panel relative overflow-hidden rounded-3xl border border-white/10 bg-[#101a2c]/90 shadow-2xl shadow-black/20">
+              <div class="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-blue-500/[0.08] blur-3xl"></div>
+
+              <!-- Card header -->
+              <div class="relative border-b border-white/[0.08] p-5 sm:p-6">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="mono text-[10px] tracking-[.18em] text-blue-300">
+                      MY TECH STACK
+                    </p>
+                    <h3 class="mt-2 text-xl font-bold text-white">
+                      Tools I work with<span class="text-blue-400">.</span>
+                    </h3>
+                  </div>
+
+                  <div class="flex items-center gap-2 rounded-full border border-emerald-300/15 bg-emerald-300/[0.05] px-3 py-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="text-[10px] font-medium text-emerald-200">TECH STACK</span>
+                  </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mt-6 grid grid-cols-2 rounded-xl border border-white/[0.08] bg-[#080f1c]/70 p-1">
+                  <button
+                    type="button"
+                    @click="changeTechTab('languages')"
+                    :class="activeTechTab === 'languages'
+                      ? 'bg-blue-500/15 text-blue-200 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-200'"
+                    class="rounded-lg px-3 py-3 text-xs font-bold transition duration-300 sm:text-sm"
+                  >
+                    <Code2 :size="15" class="mr-2 inline-block" />
+                    Languages
+                  </button>
+
+                  <button
+                    type="button"
+                    @click="changeTechTab('tools')"
+                    :class="activeTechTab === 'tools'
+                      ? 'bg-blue-500/15 text-blue-200 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-200'"
+                    class="rounded-lg px-3 py-3 text-xs font-bold transition duration-300 sm:text-sm"
+                  >
+                    <Terminal :size="15" class="mr-2 inline-block" />
+                    Tools & Frameworks
+                  </button>
+                </div>
+              </div>
+
+              <!-- Logo grid -->
+              <div class="relative p-5 sm:p-6">
+                <Transition name="tech-grid" mode="out-in">
+                  <div
+                    :key="activeTechTab"
+                    class="grid grid-cols-3 gap-3 sm:grid-cols-4"
+                  >
+                    <button
+                      v-for="tech in currentTechs"
+                      :key="tech.name"
+                      type="button"
+                      class="tech-logo-card group relative flex aspect-square flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.025] p-3 transition duration-300 hover:-translate-y-1 hover:border-white/15 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                      :class="{
+                        'tech-logo-active': displayedTech.name === tech.name
+                      }"
+                      :style="{ '--logo-color': tech.color }"
+                      :aria-label="tech.name"
+                      :aria-pressed="activeTech?.name === tech.name"
+                      @mouseenter="hoveredTech = tech"
+                      @mouseleave="hoveredTech = null"
+                      @focus="hoveredTech = tech"
+                      @blur="hoveredTech = null"
+                      @click="activeTech = tech"
+                    >
+                      <span
+                        class="tech-logo-glow pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300"
+                      ></span>
+
+                      <img
+                        :src="tech.logo"
+                        :alt="tech.name"
+                        loading="lazy"
+                        class="tech-logo relative z-10 h-9 w-9 object-contain transition duration-300 sm:h-10 sm:w-10"
+                        :class="displayedTech.name === tech.name
+                          ? 'tech-logo-lit'
+                          : 'tech-logo-dim'"
+                      />
+
+                      <span
+                        class="relative z-10 text-center text-[10px] font-semibold transition-colors duration-300 sm:text-xs"
+                        :class="displayedTech.name === tech.name
+                          ? 'text-white'
+                          : 'text-slate-500'"
+                      >
+                        {{ tech.name }}
+                      </span>
+                    </button>
+                  </div>
+                </Transition>
+
+                <!-- Hover / selection details -->
+                <div class="tech-detail-box mt-5 min-h-[116px] rounded-2xl border border-white/[0.08] bg-[#080f1c]/65 p-4 sm:p-5">
+                  <Transition name="tech-info" mode="out-in">
+                    <div :key="displayedTech.name" class="flex items-start gap-4">
+                      <div
+                        class="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.04]"
+                        :style="{ boxShadow: `0 0 24px ${displayedTech.color}20` }"
+                      >
+                        <img
+                          :src="displayedTech.logo"
+                          :alt="displayedTech.name"
+                          class="h-6 w-6 object-contain"
+                          :style="{ filter: `drop-shadow(0 0 5px ${displayedTech.color}65)` }"
+                        />
+                      </div>
+
+                      <div class="min-w-0 flex-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                          <h4 class="text-sm font-bold text-white">
+                            {{ displayedTech.name }}
+                          </h4>
+                          <span class="h-1 w-1 rounded-full bg-slate-600"></span>
+                          <span class="text-[10px] text-slate-500">
+                            {{ activeTechTab === 'languages' ? 'Programming Language' : 'Development Tool' }}
+                          </span>
+                        </div>
+
+                        <p class="mt-2 text-xs leading-6 text-slate-400">
+                          {{ displayedTech.desc }}
+                        </p>
+                      </div>
+
+                      <span
+                        class="mt-1 h-2 w-2 shrink-0 rounded-full"
+                        :style="{
+                          backgroundColor: displayedTech.color,
+                          boxShadow: `0 0 12px ${displayedTech.color}`
+                        }"
+                      ></span>
+                    </div>
+                  </Transition>
+                </div>
+
+                <p class="mt-4 text-center text-[10px] text-slate-600">
+                  HOVER OR SELECT A TECHNOLOGY TO EXPLORE
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="projects" class="border-y border-white/[0.07] bg-[#0e1829] py-24">
+      
+      <section id="projects" class="border-y border-white/[0.07] bg-[#0e1829] py-16 lg:py-20">
         <div class="mx-auto max-w-7xl px-5 lg:px-8">
           <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-            <div><p class="mono text-xs tracking-[.2em] text-blue-300">02 / SELECTED WORK</p><h2 class="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">Testing in practice<span class="text-blue-400">.</span></h2><p class="mt-4 max-w-xl leading-7 text-slate-400">A selection of projects that demonstrate test thinking, automation, and application analysis.</p></div>
+            <div>
+              <p class="mono text-xs tracking-[.2em] text-blue-300">
+                02 / PROYEK PILIHAN
+              </p>
+              <h2 class="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
+                Karya dan Pengujian<span class="text-blue-400">.</span>
+              </h2>
+              <p class="mt-4 max-w-xl leading-7 text-slate-400">
+                Kumpulan proyek yang menunjukkan pengalaman saya dalam pengembangan
+                web, pengujian perangkat lunak, dan analisis aplikasi.
+              </p>
+            </div>
+
             <div class="flex flex-wrap gap-2">
-              <button v-for="filter in filters" :key="filter" @click="activeFilter=filter" class="rounded-full border px-4 py-2 text-xs font-semibold transition" :class="activeFilter===filter ? 'border-blue-400 bg-blue-500/15 text-blue-200' : 'border-white/10 text-slate-400 hover:border-white/30'">{{ filter }}</button>
+              <button
+                v-for="filter in filters"
+                :key="filter"
+                @click="activeFilter = filter"
+                class="rounded-full border px-4 py-2 text-xs font-semibold transition"
+                :class="activeFilter === filter
+                  ? 'border-blue-400 bg-blue-500/15 text-blue-200'
+                  : 'border-white/10 text-slate-400 hover:border-white/30'"
+              >
+                {{ filter }}
+              </button>
             </div>
           </div>
-          <div class="mt-10 grid gap-5 lg:grid-cols-3">
-            <article v-for="(project, index) in visibleProjects" :key="project.number" class="card group overflow-hidden rounded-2xl reveal" :class="`delay-${index+1}`">
-              <div class="relative flex h-44 items-center justify-center overflow-hidden border-b border-white/[0.06] bg-gradient-to-br" :class="project.accent">
-                <div class="absolute inset-0 grid-bg opacity-50"></div>
-                <div class="relative rounded-2xl border border-white/15 bg-[#0b1220]/80 p-5 shadow-2xl transition duration-500 group-hover:scale-105 group-hover:-rotate-2">
-                  <div class="mono mb-3 text-xs text-blue-300">SUITE_{{ project.number }}</div>
-                  <div class="space-y-2"><div class="h-2 w-36 rounded bg-slate-600/70"></div><div class="h-2 w-24 rounded bg-slate-700"></div><div class="mt-3 flex gap-2"><span class="h-5 w-14 rounded bg-emerald-400/20"></span><span class="h-5 w-10 rounded bg-blue-400/20"></span></div></div>
-                </div>
-                <span class="mono absolute right-4 top-4 text-xs text-slate-400">{{ project.number }} / 03</span>
+
+          <div class="mt-8 grid gap-5 lg:grid-cols-3">
+            <article
+              v-for="(project, index) in visibleProjects"
+              :key="project.number"
+              class="card group overflow-hidden rounded-2xl reveal"
+              :class="`delay-${index + 1}`"
+            >
+              <!-- Screenshot proyek -->
+              <div
+                class="relative h-48 overflow-hidden border-b border-white/[0.06] bg-gradient-to-br sm:h-52"
+                :class="project.accent"
+              >
+                <img
+                  :src="project.image"
+                  :alt="`Screenshot ${project.name}`"
+                  loading="lazy"
+                  class="h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
+                />
+
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0b1220]/60 via-transparent to-transparent"></div>
+
+                <span class="mono absolute right-3 top-3 rounded-lg border border-white/10 bg-[#0b1220]/80 px-3 py-1.5 text-xs text-slate-300 backdrop-blur">
+                  {{ project.number }} / 03
+                </span>
               </div>
+
               <div class="p-6">
-                <div class="flex items-center justify-between gap-3"><span class="mono text-[10px] uppercase tracking-widest text-blue-300">{{ project.type }}</span><span class="text-[10px] text-slate-500">{{ project.status }}</span></div>
-                <h3 class="mt-3 text-xl font-bold">{{ project.name }}</h3>
-                <p class="mt-3 min-h-[72px] text-sm leading-6 text-slate-400">{{ project.description }}</p>
-                <ul class="mt-4 space-y-2"><li v-for="detail in project.details" :key="detail" class="flex gap-2 text-xs text-slate-400"><CircleCheck :size="14" class="mt-0.5 shrink-0 text-blue-300"/>{{ detail }}</li></ul>
-                <div class="mt-5 flex flex-wrap gap-2"><span v-for="tag in project.tags" :key="tag" class="rounded-md border border-white/10 px-2 py-1 text-[10px] text-slate-400">{{ tag }}</span></div>
-                <a href="#contact" class="mt-6 inline-flex items-center text-sm font-semibold text-blue-300 transition group-hover:text-blue-200">Discuss this project <ChevronRight :size="16" class="ml-1 transition group-hover:translate-x-1"/></a>
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <span class="mono text-[10px] uppercase tracking-widest text-blue-300">
+                    {{ project.type }}
+                  </span>
+                  <span class="text-[10px] text-slate-500">
+                    {{ project.status }}
+                  </span>
+                </div>
+
+                <h3 class="mt-3 text-xl font-bold text-white">
+                  {{ project.name }}
+                </h3>
+
+                <p class="mt-3 min-h-[72px] text-sm leading-6 text-slate-400">
+                  {{ project.description }}
+                </p>
+
+                <ul class="mt-4 space-y-2">
+                  <li
+                    v-for="detail in project.details"
+                    :key="detail"
+                    class="flex gap-2 text-xs text-slate-400"
+                  >
+                    <CircleCheck :size="14" class="mt-0.5 shrink-0 text-blue-300" />
+                    {{ detail }}
+                  </li>
+                </ul>
+
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span
+                    v-for="tag in project.tags"
+                    :key="tag"
+                    class="rounded-md border border-white/10 px-2 py-1 text-[10px] text-slate-400"
+                  >
+                    {{ tag }}
+                  </span>
+                </div>
+
+                <a
+                  href="#contact"
+                  class="mt-6 inline-flex items-center text-sm font-semibold text-blue-300 transition group-hover:text-blue-200"
+                >
+                  Diskusikan proyek
+                  <ChevronRight :size="16" class="ml-1 transition group-hover:translate-x-1" />
+                </a>
               </div>
             </article>
           </div>
-          <p class="mt-5 text-xs leading-5 text-slate-500">Project cards are starter copy. Replace descriptions with your exact contributions and link to public artifacts only when permitted.</p>
         </div>
       </section>
+
 
       <section id="testing-lab" class="mx-auto max-w-7xl px-5 py-24 lg:px-8">
         <div class="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
