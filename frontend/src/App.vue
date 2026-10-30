@@ -486,7 +486,7 @@ async function sendMessage() {
   sending.value = true
   try {
     if (!apiBase) {
-      formStatus.value = 'Demo mode: message validated locally. Configure VITE_API_BASE_URL to submit to the backend.'
+      formStatus.value = 'The contact form is currently unavailable. Please feel free to reach me directly via email at fawwaznafi562@gmail.com. Thank you for your understanding!.'
       return
     }
     const response = await fetch(`${apiBase}/contact`, {
