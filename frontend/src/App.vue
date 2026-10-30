@@ -325,7 +325,7 @@ const projects = [
       'Pengujian tambah, ubah, dan hapus produk',
       'Validasi hasil berdasarkan kondisi yang diharapkan'
     ],
-    image: '/public/carsale2.png',
+    image: '/carsale2.png',
     status: 'Proyek Pengujian',
     accent: 'from-blue-500/20 to-cyan-400/5'
   },
@@ -341,7 +341,7 @@ const projects = [
       'Mengidentifikasi jalur independen',
       'Mengevaluasi kompleksitas kode'
     ],
-    image: '/public/diakad.png',
+    image: '/diakad.png',
     status: 'Proyek Skripsi',
     accent: 'from-violet-500/20 to-blue-400/5'
   },
